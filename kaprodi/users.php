@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once "db.php";
+require_once "../config/db.php";
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'kaprodi') {
-    header("Location: dashboard.php");
+    header("Location: ../common/dashboard.php");
     exit();
 }
 
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(":id", $id);
             if ($stmt->execute()) {
                 $_SESSION['success'] = "User berhasil diupdate!";
-                header("Location: kaprodi_users.php");
+                header("Location: users.php");
                 exit();
             } else {
                 $error = "Gagal update user!";
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(":role", $role);
             if ($stmt->execute()) {
                 $_SESSION['success'] = "User berhasil ditambahkan!";
-                header("Location: kaprodi_users.php");
+                header("Location: users.php");
                 exit();
             } else {
                 $error = "Gagal tambah user!";
@@ -68,7 +68,7 @@ if (isset($_GET['hapus'])) {
     $stmt->bindParam(":id", $id);
     $stmt->execute();
     $_SESSION['success'] = "User berhasil dihapus!";
-    header("Location: kaprodi_users.php");
+    header("Location: users.php");
     exit();
 }
 
@@ -97,41 +97,37 @@ if (isset($_SESSION['success'])) {
     <title>Kelola User - Kaprodi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        .sidebar { min-height: calc(100vh - 100px); }
-    </style>
 </head>
 <body class="bg-light">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container-fluid px-4">
-        <a class="navbar-brand" href="dashboard.php">Dashboard Kampus</a>
+        <a class="navbar-brand" href="../common/dashboard.php">Dashboard Kampus</a>
         <div class="d-flex text-white align-items-center">
             <span class="me-3">Halo, <strong><?= htmlspecialchars($_SESSION['nama']) ?></strong></span>
-            <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+            <a href="../logout.php" class="btn btn-outline-light btn-sm">Logout</a>
         </div>
     </div>
 </nav>
 
 <div class="container-fluid px-4">
     <div class="row">
-        <!-- Sidebar Tetap Konsisten Lebarnya -->
+        <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 px-0 mb-4">
             <div class="list-group shadow-sm rounded-0">
-                <a href="dashboard.php" class="list-group-item list-group-item-action py-3">Dashboard Utama</a>
-                <a href="kaprodi_users.php" class="list-group-item list-group-item-action active py-3">Kelola User (CRUD)</a>
-                <a href="profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
+                <a href="../common/dashboard.php" class="list-group-item list-group-item-action py-3">Dashboard Utama</a>
+                <a href="users.php" class="list-group-item list-group-item-action active py-3">Kelola User (CRUD)</a>
+                <a href="../common/profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 px-md-4">
             <?php if ($action == 'add' || $action == 'edit'): ?>
-                <!-- Form Halaman Terpisah untuk Add/Edit -->
                 <div class="card shadow-sm p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0"><?= $action == 'edit' ? 'Edit User' : 'Tambah User Baru' ?></h4>
-                        <a href="kaprodi_users.php" class="btn btn-secondary btn-sm">&larr; Kembali</a>
+                        <a href="users.php" class="btn btn-secondary btn-sm">&larr; Kembali</a>
                     </div>
 
                     <?php if ($error): ?><div class="alert alert-danger py-2"><?= $error ?></div><?php endif; ?>
@@ -160,19 +156,17 @@ if (isset($_SESSION['success'])) {
                                 <option value="mahasiswa" <?= (isset($editData) && $editData['role'] == 'mahasiswa') ? 'selected' : '' ?>>Mahasiswa</option>
                             </select>
                         </div>
-                        <!-- Tombol Batal & Simpan di Paling Bawah -->
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="kaprodi_users.php" class="btn btn-secondary">Batal</a>
+                            <a href="users.php" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
                 </div>
             <?php else: ?>
-                <!-- List / Table View -->
                 <div class="card shadow-sm p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0">Daftar Pengguna Sistem</h4>
-                        <a href="kaprodi_users.php?action=add" class="btn btn-primary btn-sm">+ Tambah User</a>
+                        <a href="users.php?action=add" class="btn btn-primary btn-sm">+ Tambah User</a>
                     </div>
 
                     <?php if ($success): ?><div class="alert alert-success py-2"><?= $success ?></div><?php endif; ?>
@@ -195,8 +189,8 @@ if (isset($_SESSION['success'])) {
                                 <td><?= htmlspecialchars($u['username']) ?></td>
                                 <td><span class="badge bg-secondary"><?= $u['role'] ?></span></td>
                                 <td>
-                                    <a href="kaprodi_users.php?action=edit&id=<?= $u['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                                    <a href="kaprodi_users.php?hapus=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus user ini?')">Hapus</a>
+                                    <a href="users.php?action=edit&id=<?= $u['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="users.php?hapus=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus user ini?')">Hapus</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

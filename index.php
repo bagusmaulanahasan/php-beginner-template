@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once "db.php";
+require_once "config/db.php";
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header("Location: common/dashboard.php");
     exit();
 }
 
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['nama'] = $user['nama'];
                 $_SESSION['role'] = $user['role'];
-                header("Location: dashboard.php");
+                header("Location: common/dashboard.php");
                 exit();
             } else {
                 $error = "Username atau password salah!";

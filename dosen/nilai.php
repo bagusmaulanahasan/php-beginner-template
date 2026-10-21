@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once "db.php";
+require_once "../config/db.php";
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'dosen') {
-    header("Location: dashboard.php");
+    header("Location: ../common/dashboard.php");
     exit();
 }
 
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
             $_SESSION['success'] = "Nilai berhasil disimpan!";
-            header("Location: dosen_nilai.php");
+            header("Location: nilai.php");
             exit();
         } else {
             $error = "Gagal menyimpan nilai!";
@@ -49,7 +49,7 @@ if (isset($_GET['hapus'])) {
     $stmt->bindParam(":id", $id);
     $stmt->execute();
     $_SESSION['success'] = "Nilai berhasil dihapus!";
-    header("Location: dosen_nilai.php");
+    header("Location: nilai.php");
     exit();
 }
 
@@ -89,10 +89,10 @@ if (isset($_SESSION['success'])) {
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container-fluid px-4">
-        <a class="navbar-brand" href="dashboard.php">Dashboard Kampus</a>
+        <a class="navbar-brand" href="../common/dashboard.php">Dashboard Kampus</a>
         <div class="d-flex text-white align-items-center">
             <span class="me-3">Halo, <strong><?= htmlspecialchars($_SESSION['nama']) ?></strong></span>
-            <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+            <a href="../logout.php" class="btn btn-outline-light btn-sm">Logout</a>
         </div>
     </div>
 </nav>
@@ -101,9 +101,9 @@ if (isset($_SESSION['success'])) {
     <div class="row">
         <div class="col-md-3 col-lg-2 px-0 mb-4">
             <div class="list-group shadow-sm rounded-0">
-                <a href="dashboard.php" class="list-group-item list-group-item-action py-3">Dashboard Utama</a>
-                <a href="dosen_nilai.php" class="list-group-item list-group-item-action active py-3">Input Nilai (CRUD)</a>
-                <a href="profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
+                <a href="../common/dashboard.php" class="list-group-item list-group-item-action py-3">Dashboard Utama</a>
+                <a href="nilai.php" class="list-group-item list-group-item-action active py-3">Input Nilai (CRUD)</a>
+                <a href="../common/profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
             </div>
         </div>
 
@@ -112,7 +112,7 @@ if (isset($_SESSION['success'])) {
                 <div class="card shadow-sm p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0"><?= $action == 'edit' ? 'Edit Nilai Mahasiswa' : 'Tambah Nilai Mahasiswa' ?></h4>
-                        <a href="dosen_nilai.php" class="btn btn-secondary btn-sm">&larr; Kembali</a>
+                        <a href="nilai.php" class="btn btn-secondary btn-sm">&larr; Kembali</a>
                     </div>
 
                     <?php if ($error): ?><div class="alert alert-danger py-2"><?= $error ?></div><?php endif; ?>
@@ -144,7 +144,7 @@ if (isset($_SESSION['success'])) {
                             <input type="text" name="nilai" class="form-control" value="<?= $editData['nilai'] ?? '' ?>" required>
                         </div>
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="dosen_nilai.php" class="btn btn-secondary">Batal</a>
+                            <a href="nilai.php" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
@@ -153,7 +153,7 @@ if (isset($_SESSION['success'])) {
                 <div class="card shadow-sm p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0">Daftar Nilai Mahasiswa</h4>
-                        <a href="dosen_nilai.php?action=add" class="btn btn-primary btn-sm">+ Input Nilai</a>
+                        <a href="nilai.php?action=add" class="btn btn-primary btn-sm">+ Input Nilai</a>
                     </div>
 
                     <?php if ($success): ?><div class="alert alert-success py-2"><?= $success ?></div><?php endif; ?>
@@ -174,8 +174,8 @@ if (isset($_SESSION['success'])) {
                                 <td><?= htmlspecialchars($n['nama_mk']) ?></td>
                                 <td><span class="badge bg-success"><?= $n['nilai'] ?></span></td>
                                 <td>
-                                    <a href="dosen_nilai.php?action=edit&id=<?= $n['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                                    <a href="dosen_nilai.php?hapus=<?= $n['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus nilai ini?')">Hapus</a>
+                                    <a href="nilai.php?action=edit&id=<?= $n['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="nilai.php?hapus=<?= $n['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus nilai ini?')">Hapus</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

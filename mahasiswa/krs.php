@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once "db.php";
+require_once "../config/db.php";
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'mahasiswa') {
-    header("Location: dashboard.php");
+    header("Location: ../common/dashboard.php");
     exit();
 }
 
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(":c_id", $course_id);
             if ($stmt->execute()) {
                 $_SESSION['success'] = "Matakuliah berhasil ditambahkan ke KRS!";
-                header("Location: mahasiswa_krs.php");
+                header("Location: krs.php");
                 exit();
             } else {
                 $error = "Gagal mengambil matakuliah!";
@@ -48,7 +48,7 @@ if (isset($_GET['hapus'])) {
     $stmt->bindParam(":m_id", $user_id);
     $stmt->execute();
     $_SESSION['success'] = "Matakuliah KRS berhasil dibatalkan!";
-    header("Location: mahasiswa_krs.php");
+    header("Location: krs.php");
     exit();
 }
 
@@ -80,10 +80,10 @@ if (isset($_SESSION['success'])) {
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container-fluid px-4">
-        <a class="navbar-brand" href="dashboard.php">Dashboard Kampus</a>
+        <a class="navbar-brand" href="../common/dashboard.php">Dashboard Kampus</a>
         <div class="d-flex text-white align-items-center">
             <span class="me-3">Halo, <strong><?= htmlspecialchars($_SESSION['nama']) ?></strong></span>
-            <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+            <a href="../logout.php" class="btn btn-outline-light btn-sm">Logout</a>
         </div>
     </div>
 </nav>
@@ -92,9 +92,9 @@ if (isset($_SESSION['success'])) {
     <div class="row">
         <div class="col-md-3 col-lg-2 px-0 mb-4">
             <div class="list-group shadow-sm rounded-0">
-                <a href="dashboard.php" class="list-group-item list-group-item-action py-3">Dashboard Utama</a>
-                <a href="mahasiswa_krs.php" class="list-group-item list-group-item-action active py-3">KRS Mahasiswa (CRUD)</a>
-                <a href="profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
+                <a href="../common/dashboard.php" class="list-group-item list-group-item-action py-3">Dashboard Utama</a>
+                <a href="krs.php" class="list-group-item list-group-item-action active py-3">KRS Mahasiswa (CRUD)</a>
+                <a href="../common/profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
             </div>
         </div>
 
@@ -103,7 +103,7 @@ if (isset($_SESSION['success'])) {
                 <div class="card shadow-sm p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0">Ambil Mata Kuliah Baru</h4>
-                        <a href="mahasiswa_krs.php" class="btn btn-secondary btn-sm">&larr; Kembali</a>
+                        <a href="krs.php" class="btn btn-secondary btn-sm">&larr; Kembali</a>
                     </div>
 
                     <?php if ($error): ?><div class="alert alert-danger py-2"><?= $error ?></div><?php endif; ?>
@@ -119,7 +119,7 @@ if (isset($_SESSION['success'])) {
                             </select>
                         </div>
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="mahasiswa_krs.php" class="btn btn-secondary">Batal</a>
+                            <a href="krs.php" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
@@ -128,7 +128,7 @@ if (isset($_SESSION['success'])) {
                 <div class="card shadow-sm p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0">Daftar KRS & Nilai Anda</h4>
-                        <a href="mahasiswa_krs.php?action=add" class="btn btn-primary btn-sm">+ Ambil Matakuliah</a>
+                        <a href="krs.php?action=add" class="btn btn-primary btn-sm">+ Ambil Matakuliah</a>
                     </div>
 
                     <?php if ($success): ?><div class="alert alert-success py-2"><?= $success ?></div><?php endif; ?>
@@ -157,7 +157,7 @@ if (isset($_SESSION['success'])) {
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <a href="mahasiswa_krs.php?hapus=<?= $k['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Batalkan matakuliah ini?')">Batalkan</a>
+                                    <a href="krs.php?hapus=<?= $k['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Batalkan matakuliah ini?')">Batalkan</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
