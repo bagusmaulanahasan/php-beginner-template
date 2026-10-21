@@ -94,6 +94,7 @@ if (isset($_SESSION['success'])) {
             <div class="list-group shadow-sm rounded-0">
                 <a href="dashboard.php" class="list-group-item list-group-item-action py-3">Dashboard Utama</a>
                 <a href="mahasiswa_krs.php" class="list-group-item list-group-item-action active py-3">KRS Mahasiswa (CRUD)</a>
+                <a href="profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
             </div>
         </div>
 

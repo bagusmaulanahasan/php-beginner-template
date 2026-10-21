@@ -66,6 +66,7 @@ if ($conn) {
                 <?php elseif ($role === 'mahasiswa'): ?>
                     <a href="mahasiswa_krs.php" class="list-group-item list-group-item-action py-3">KRS Mahasiswa (CRUD)</a>
                 <?php endif; ?>
+                <a href="profile.php" class="list-group-item list-group-item-action py-3">Profil Pengguna</a>
             </div>
         </div>
 
